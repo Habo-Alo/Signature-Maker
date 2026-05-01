@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Signature Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-slate-900 to-indigo-800 bg-clip-text text-transparent">Gmail Signature Builder</h1>
+                    <p class="text-xs text-slate-500 font-medium">Create clean, copy-paste signatures</p>
+                </div>
+            </div>
+            <button onclick="resetFields()" class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Reset Default
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side: Controls -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                <!-- Tabs Selector -->
+                <div class="bg-white p-1 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-1">
+                    <button id="btn-info" onclick="switchTab('info')" class="tab-btn flex-1 min-w-[80px] py-2.5 px-3 rounded-lg text-sm font-semibold border transition text-indigo-600 border-indigo-600 bg-indigo-50/50">
+                        Details
+                    </button>
+                    <button id="btn-design" onclick="switchTab('design')" class="tab-btn flex-1 min-w-[80px] py-2.5 px-3 rounded-lg text-sm font-semibold border transition border-transparent text-slate-500 hover:bg-slate-50">
+                        Design
+                    </button>
+                    <button id="btn-social" onclick="switchTab('social')" class="tab-btn flex-1 min-w-[80px] py-2.5 px-3 rounded-lg text-sm font-semibold border transition border-transparent text-slate-500 hover:bg-slate-50">
+                        Socials
+                    </button>
+                </div>
+
+                <!-- Tab Content Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    
+                    <!-- Tab 1: Info -->
+                    <div id="tab-info" class="tab-content flex flex-col gap-4">
+                        <div class="border-b border-slate-100 pb-2 mb-2">
+                            <h3 class="font-bold text-slate-900">Personal & Job Details</h3>
+                            <p class="text-xs text-slate-400">Fill in the contact info you want to display</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+                                <input type="text" id="name" value="Jane Doe" placeholder="e.g. Jane Doe" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Job Title</label>
+                                <input type="text" id="title" value="Creative Director" placeholder="e.g. Product Designer" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Company Name</label>
+                            <input type="text" id="company" value="Design Studio Inc." placeholder="e.g. Acme Corp" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Direct Phone</label>
+                                <input type="text" id="phone" value="+1 (234) 567-8900" placeholder="e.g. +1 (555) 000-0000" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Mobile Phone</label>
+                                <input type="text" id="mobile" value="+1 (987) 654-3210" placeholder="e.g. +1 (555) 111-2222" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+                                <input type="email" id="email" value="jane@designstudio.com" placeholder="e.g. you@work.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Website URL</label>
+                                <input type="url" id="website" value="https://designstudio.com" placeholder="e.g. https://domain.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Physical Address</label>
+                            <input type="text" id="address" value="789 Creative Blvd, Suite 100" placeholder="e.g. 123 Main St, New York, NY" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Design -->
+                    <div id="tab-design" class="tab-content hidden flex flex-col gap-4">
+                        <div class="border-b border-slate-100 pb-2 mb-2">
+                            <h3 class="font-bold text-slate-900">Design & Styling</h3>
+                            <p class="text-xs text-slate-400">Personalize colors, fonts, and image sizes</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Accent Color</label>
+                            <div class="flex items-center gap-3">
+                                <input type="color" id="accentColor" value="#3B82F6" class="w-10 h-10 p-0 border-0 rounded-lg overflow-hidden cursor-pointer">
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="setAccentColor('#3B82F6')" class="w-6 h-6 rounded-md bg-[#3B82F6] hover:scale-110 transition"></button>
+                                    <button onclick="setAccentColor('#10B981')" class="w-6 h-6 rounded-md bg-[#10B981] hover:scale-110 transition"></button>
+                                    <button onclick="setAccentColor('#6366F1')" class="w-6 h-6 rounded-md bg-[#6366F1] hover:scale-110 transition"></button>
+                                    <button onclick="setAccentColor('#F43F5E')" class="w-6 h-6 rounded-md bg-[#F43F5E] hover:scale-110 transition"></button>
+                                    <button onclick="setAccentColor('#F59E0B')" class="w-6 h-6 rounded-md bg-[#F59E0B] hover:scale-110 transition"></button>
+                                    <button onclick="setAccentColor('#1E293B')" class="w-6 h-6 rounded-md bg-[#1E293B] hover:scale-110 transition"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Font Family</label>
+                            <select id="fontFamily" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition cursor-pointer">
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="'Helvetica Neue', Helvetica, sans-serif">Helvetica</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                                <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                                <option value="Tahoma, sans-serif">Tahoma</option>
+                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                <option value="'Courier New', Courier, monospace">Courier New</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-xs font-semibold text-slate-600">Avatar / Logo Size</label>
+                                <span id="logoSizeVal" class="text-xs font-bold text-slate-500">80px</span>
+                            </div>
+                            <input type="range" id="logoSize" min="40" max="120" value="80" class="w-full cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-4 mt-2 flex flex-col gap-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
+                                <input type="checkbox" id="showLogo" checked class="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                                Show Profile Picture / Logo
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
+                                <input type="checkbox" id="showCompanyLogo" class="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                                Show Secondary Company Logo
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
+                                <input type="checkbox" id="showSocials" checked class="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+                                Show Social Media Icons
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Socials & Images -->
+                    <div id="tab-social" class="tab-content hidden flex flex-col gap-4">
+                        <div class="border-b border-slate-100 pb-2 mb-2">
+                            <h3 class="font-bold text-slate-900">Images & Social Links</h3>
+                            <p class="text-xs text-slate-400">Add URLs for images and social profiles</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Profile Photo / Logo URL</label>
+                            <input type="url" id="logoUrl" value="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80" placeholder="Link to public image" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            <p class="text-[10px] text-slate-400 mt-1 font-medium">Tip: Use Imgur, Postimages, or absolute links from your site</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Company Logo URL</label>
+                            <input type="url" id="companyLogoUrl" value="https://cdn-icons-png.flaticon.com/128/6013/6013233.png" placeholder="Link to public logo" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                        </div>
+
+                        <div class="space-y-3 mt-2">
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Social Links</h4>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">LinkedIn</label>
+                                <input type="url" id="linkedin" value="https://linkedin.com" placeholder="LinkedIn Profile URL" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Twitter / X</label>
+                                <input type="url" id="twitter" value="https://twitter.com" placeholder="Twitter Profile URL" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Instagram</label>
+                                <input type="url" id="instagram" value="https://instagram.com" placeholder="Instagram Profile URL" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Facebook</label>
+                                <input type="url" id="facebook" value="https://facebook.com" placeholder="Facebook Profile URL" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">GitHub</label>
+                                <input type="url" id="github" value="https://github.com" placeholder="GitHub Profile URL" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Preview & Selector -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                <!-- Template Picker -->
+                <div>
+                    <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Choose Template</span>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 select-none">
+                        <button onclick="selectTemplate(1)" class="template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border bg-indigo-50 border-indigo-600 text-indigo-700 transition cursor-pointer">
+                            Corporate
+                        </button>
+                        <button onclick="selectTemplate(2)" class="template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border border-slate-200 hover:bg-slate-100 transition cursor-pointer">
+                            Minimalist
+                        </button>
+                        <button onclick="selectTemplate(3)" class="template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border border-slate-200 hover:bg-slate-100 transition cursor-pointer">
+                            Modern
+                        </button>
+                        <button onclick="selectTemplate(4)" class="template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border border-slate-200 hover:bg-slate-100 transition cursor-pointer">
+                            Executive
+                        </button>
+                        <button onclick="selectTemplate(5)" class="template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border border-slate-200 hover:bg-slate-100 transition cursor-pointer">
+                            Creative
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col gap-6 items-center">
+                    <span class="block w-full text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Live Preview</span>
+                    
+                    <!-- Sandbox area where Rich Text is formed -->
+                    <div class="w-full p-6 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center bg-white min-h-[160px]">
+                        <div id="signature-preview" class="w-full max-w-full overflow-x-auto p-2"></div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="w-full flex flex-col sm:flex-row gap-3">
+                        <button onclick="copySignature()" class="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 transition cursor-pointer group">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            Copy Signature
+                        </button>
+                        <button onclick="downloadHTML()" class="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3.5 px-6 rounded-xl transition cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download HTML
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="bg-slate-100 rounded-2xl border border-slate-200/50 p-5 flex gap-4">
+                    <div class="text-indigo-600 mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-800 mb-1">How to apply in Gmail:</h4>
+                        <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1.5 leading-relaxed">
+                            <li>Click <span class="font-semibold text-slate-800">Copy Signature</span> above.</li>
+                            <li>Navigate to your <span class="font-semibold text-slate-800">Gmail Settings</span> (Gear icon &rarr; See all settings).</li>
+                            <li>On the <span class="font-semibold text-slate-800">General</span> tab, scroll down to <span class="font-semibold text-slate-800">Signature</span>.</li>
+                            <li>Select/create a signature, click inside the box, and press <kbd class="px-1.5 py-0.5 border border-slate-300 rounded bg-white text-slate-700 font-sans shadow-sm font-semibold">Ctrl+V</kbd> (<kbd class="px-1.5 py-0.5 border border-slate-300 rounded bg-white text-slate-700 font-sans shadow-sm font-semibold">Cmd+V</kbd> on Mac).</li>
+                            <li>Scroll all the way down and save changes!</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+        <span id="toast-icon" class="text-base">✅</span>
+        <span id="toast-msg" class="font-medium">Copied successfully!</span>
+    </div>
+
+    <!-- Generator Scripts -->
+    <script>
+        const fields = [
+            'name', 'title', 'company', 'phone', 'mobile', 'email', 'website', 
+            'address', 'logoUrl', 'companyLogoUrl', 'accentColor', 'fontFamily', 
+            'linkedin', 'twitter', 'instagram', 'facebook', 'github'
+        ];
+
+        let selectedTemplate = 1;
+
+        function getVal(id) {
+            return document.getElementById(id).value.trim();
+        }
+
+        function getChecked(id) {
+            return document.getElementById(id).checked;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'text-indigo-600', 'bg-indigo-50/50');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+            const btn = document.getElementById(`btn-${tabName}`);
+            btn.classList.add('border-indigo-600', 'text-indigo-600', 'bg-indigo-50/50');
+            btn.classList.remove('border-transparent', 'text-slate-500');
+        }
+
+        function setAccentColor(hex) {
+            document.getElementById('accentColor').value = hex;
+            updateSignature();
+        }
+
+        function selectTemplate(index) {
+            selectedTemplate = index;
+            document.querySelectorAll('.template-btn').forEach((btn, idx) => {
+                if (idx + 1 === index) {
+                    btn.className = "template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border bg-indigo-50 border-indigo-600 text-indigo-700 transition cursor-pointer";
+                } else {
+                    btn.className = "template-btn py-3 px-2 text-center rounded-xl font-semibold text-xs border border-slate-200 hover:bg-slate-100 transition cursor-pointer";
+                }
+            });
+            updateSignature();
+        }
+
+        // --- TEMPLATE RENDERING ---
+        function renderT1(data) {
+            const showLogo = getChecked('showLogo');
+            const showSocials = getChecked('showSocials');
+            
+            return `
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: ${data.fontFamily}; font-size: 14px; line-height: 1.5; color: #333333;">
+                  <tr>
+                    ${showLogo && data.logoUrl ? `
+                    <td style="border-right: 3px solid ${data.accentColor}; padding-right: 20px; vertical-align: top;">
+                      <img src="${data.logoUrl}" alt="Logo" width="${data.logoSize}" height="${data.logoSize}" style="display: block; border-radius: 50%; width: ${data.logoSize}px; height: ${data.logoSize}px; object-fit: cover;" />
+                    </td>
+                    ` : ''}
+                    <td style="padding-left: ${showLogo && data.logoUrl ? '20px' : '0px'}; vertical-align: top;">
+                      <div style="font-size: 18px; font-weight: bold; color: ${data.accentColor}; margin-bottom: 2px;">${data.name || 'Jane Doe'}</div>
+                      <div style="font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 2px;">${data.title || 'Creative Director'}</div>
+                      <div style="font-size: 13px; color: #6b7280; font-weight: 500; margin-bottom: 12px;">${data.company || 'Design Studio Inc.'}</div>
+                      
+                      <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #4b5563;">
+                        ${data.phone ? `<tr><td style="padding-bottom: 4px; padding-right: 8px; font-weight: 600; color: ${data.accentColor};">P:</td><td style="padding-bottom: 4px; color: #4b5563;">${data.phone}</td></tr>` : ''}
+                        ${data.mobile ? `<tr><td style="padding-bottom: 4px; padding-right: 8px; font-weight: 600; color: ${data.accentColor};">M:</td><td style="padding-bottom: 4px; color: #4b5563;">${data.mobile}</td></tr>` : ''}
+                        ${data.email ? `<tr><td style="padding-bottom: 4px; padding-right: 8px; font-weight: 600; color: ${data.accentColor};">E:</td><td style="padding-bottom: 4px;"><a href="mailto:${data.email}" style="color: ${data.accentColor}; text-decoration: none;">${data.email}</a></td></tr>` : ''}
+                        ${data.website ? `<tr><td style="padding-bottom: 4px; padding-right: 8px; font-weight: 600; color: ${data.accentColor};">W:</td><td style="padding-bottom: 4px;"><a href="${data.website}" target="_blank" style="color: ${data.accentColor}; text-decoration: none;">${data.website}</a></td></tr>` : ''}
+                      </table>
+                      
+                      ${showSocials && (data.linkedin || data.twitter || data.instagram || data.facebook || data.github) ? `
+                      <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 12px;">
+                        <tr>
+                          ${data.linkedin ? `<td style="padding-right: 8px;"><a href="${data.linkedin}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/32/145/145807.png" width="16" height="16" style="display: block; width: 16px; height: 16px;" alt="LinkedIn"></a></td>` : ''}
+                          ${data.twitter ? `<td style="padding-right: 8px;"><a href="${data.twitter}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/32/733/733579.png" width="16" height="16" style="display: block; width: 16px; height: 16px;" alt="Twitter"></a></td>` : ''}
+                          ${data.instagram ? `<td style="padding-right: 8px;"><a href="${data.instagram}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" width="16" height="16" style="display: block; width: 16px; height: 16px;" alt="Instagram"></a></td>` : ''}
+                          ${data.facebook ? `<td style="padding-right: 8px;"><a href="${data.facebook}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/32/145/145802.png" width="16" height="16" style="display: block; width: 16px; height: 16px;" alt="Facebook"></a></td>` : ''}
+                          ${data.github ? `<td style="padding-right: 8px;"><a href="${data.github}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/32/733/733553.png" width="16" height="16" style="display: block; width: 16px; height: 16px;" alt="GitHub"></a></td>` : ''}
+                        </tr>
+                      </table>
+                      ` : ''}
+                    </td>
+                  </tr>
+                </table>
+            `;
+        }
+
+        function renderT2(data) {
+            return `
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: ${data.fontFamily}; font-size: 14px; line-height: 1.4; color: #111827;">
+                  <tr>
+                    <td>
+                      <span style="font-size: 18px; font-weight: 700; color: ${data.accentColor};">${data.name || 'Jane Doe'}</span>
+                      <span style="color: #d1d5db; margin: 0 8px;">|</span>
+                      <span style="color: #4b5563; font-weight: 500;">${data.title || 'Creative Director'}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 10px 0;">
+                      <div style="height: 1px; width: 100%; background-color: ${data.accentColor};"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-size: 13px; color: #4b5563;">
+                      <strong style="color: #1f2937;">${data.company || 'Design Studio Inc.'}</strong>
+                      ${data.phone ? ` &bull; <span>${data.phone}</span>` : ''}
+                      ${data.email ? ` &bull; <a href="mailto:${data.email}" style="color: #4b5563; text-decoration: underline;">${data.email}</a>` : ''}
+                      ${data.website ? ` &bull; <a href="${data.website}" target="_blank" style="color: #4b5563; text-decoration: underline;">${data.website}</a>` : ''}
+                    </td>
+                  </tr>
+                </table>
+            `;
+        }
+
+        function renderT3(data) {
+            const showLogo = getChecked('showLogo');
+            return `
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: ${data.fontFamily}; font-size: 13px; color: #374151;">
+                  <tr>
+                    ${showLogo && data.logoUrl ? `
+                    <td style="vertical-align: middle; width: ${data.logoSize}px;">
+                      <img src="${data.logoUrl}" alt="Avatar" width="${data.logoSize}" height="${data.logoSize}" style="border-radius: 12px; display: block; width: ${data.logoSize}px; height: ${data.logoSize}px; object-fit: cover;" />
+                    </td>
+                    ` : ''}
+                    <td style="vertical-align: middle; padding-left: ${showLogo && data.logoUrl ? '20px' : '0px'};">
+                      <h2 style="margin: 0 0 2px 0; font-size: 18px; font-weight: 800; color: ${data.accentColor};">${data.name || 'Jane Doe'}</h2>
+                      <div style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; color: #6b7280;">${data.title || 'Creative Director'}</div>
+                      
+                      <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #4b5563;">
+                        ${data.company ? `<tr><td style="padding-bottom: 4px; color: #1f2937; font-weight: 600;">${data.company}</td></tr>` : ''}
+                        ${data.phone ? `<tr><td style="padding-bottom: 4px;">Cell: <span style="font-weight: 600; color: #1f2937;">${data.phone}</span></td></tr>` : ''}
+                        ${data.email ? `<tr><td style="padding-bottom: 4px;">Email: <a href="mailto:${data.email}" style="color: ${data.accentColor}; font-weight: 600; text-decoration: none;">${data.email}</a></td></tr>` : ''}
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+            `;
+        }
+
+        function renderT4(data) {
+            const showLogo = getChecked('showLogo');
+            const showCompanyLogo = getChecked('showCompanyLogo');
+            
+            return `
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: ${data.fontFamily}; font-size: 13px; color: #222222;">
+                  <tr>
+                    ${showLogo && data.logoUrl ? `
+                    <td style="vertical-align: middle; padding-right: 15px;">
+                      <img src="${data.logoUrl}" alt="Logo" width="${data.logoSize}" height="${data.logoSize}" style="display: block; border-radius: 50%; width: ${data.logoSize}px; height: ${data.logoSize}px; object-fit: cover;" />
+                    </td>
+                    ` : ''}
+                    <td style="vertical-align: middle; border-left: 2px solid #e5e7eb; padding-left: 15px;">
+                      <div style="font-size: 16px; font-weight: bold; color: #111827;">${data.name || 'Jane Doe'}</div>
+                      <div style="font-size: 13px; font-weight: bold; margin-bottom: 4px; color: ${data.accentColor};">${data.title || 'Creative Director'}</div>
+                      
+                      <div style="font-size: 12px; color: #4b5563;">${data.company || 'Design Studio Inc.'}</div>
+                      ${data.address ? `<div style="font-size: 12px; color: #6b7280;">${data.address}</div>` : ''}
+                      
+                      <div style="margin-top: 8px; font-size: 12px; color: #4b5563;">
+                        ${data.email ? `<a href="mailto:${data.email}" style="color: #4b5563; text-decoration: none;">${data.email}</a>` : ''}
+                        ${data.email && data.website ? ' | ' : ''}
+                        ${data.website ? `<a href="${data.website}" target="_blank" style="color: #4b5563; text-decoration: none;">${data.website}</a>` : ''}
+                      </div>
+                    </td>
+                    ${showCompanyLogo && data.companyLogoUrl ? `
+                    <td style="vertical-align: middle; padding-left: 25px;">
+                      <img src="${data.companyLogoUrl}" alt="Company Logo" width="${data.logoSize}" style="display: block; max-width: 100px;" />
+                    </td>
+                    ` : ''}
+                  </tr>
+                </table>
+            `;
+        }
+
+        function renderT5(data) {
+            const showLogo = getChecked('showLogo');
+            return `
+                <table cellpadding="0" cellspacing="0" border="0" style="font-family: ${data.fontFamily}; width: 100%; max-width: 400px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
+                  <tr>
+                    <td>
+                      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                        <tr>
+                          <td style="vertical-align: top;">
+                            <div style="font-size: 18px; font-weight: 700; color: #0f172a;">${data.name || 'Jane Doe'}</div>
+                            <div style="font-size: 13px; font-weight: 600; color: ${data.accentColor}; margin-bottom: 4px;">${data.title || 'Creative Director'}</div>
+                            <div style="font-size: 12px; color: #64748b;">${data.company || 'Design Studio Inc.'}</div>
+                          </td>
+                          ${showLogo && data.logoUrl ? `
+                          <td style="vertical-align: top; text-align: right; width: ${data.logoSize}px;">
+                            <img src="${data.logoUrl}" alt="Profile" width="${data.logoSize}" height="${data.logoSize}" style="border-radius: 9999px; width: ${data.logoSize}px; height: ${data.logoSize}px; object-fit: cover;" />
+                          </td>
+                          ` : ''}
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 15px; border-top: 1px solid #e2e8f0; margin-top: 15px;">
+                      <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #475569; width: 100%;">
+                        ${data.phone ? `<tr><td style="padding-bottom: 6px;"><span style="font-weight: 600; color: ${data.accentColor};">P:</span> ${data.phone}</td></tr>` : ''}
+                        ${data.mobile ? `<tr><td style="padding-bottom: 6px;"><span style="font-weight: 600; color: ${data.accentColor};">M:</span> ${data.mobile}</td></tr>` : ''}
+                        ${data.email ? `<tr><td style="padding-bottom: 6px;"><span style="font-weight: 600; color: ${data.accentColor};">E:</span> <a href="mailto:${data.email}" style="color: #475569; text-decoration: none;">${data.email}</a></td></tr>` : ''}
+                        ${data.website ? `<tr><td><span style="font-weight: 600; color: ${data.accentColor};">W:</span> <a href="${data.website}" style="color: #475569; text-decoration: none;">${data.website}</a></td></tr>` : ''}
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+            `;
+        }
+
+        function updateSignature() {
+            const data = {};
+            fields.forEach(f => {
+                const el = document.getElementById(f);
+                if (el) data[f] = el.value.trim();
+            });
+            
+            // Slider reading
+            const sizeSlider = document.getElementById('logoSize');
+            data.logoSize = sizeSlider.value;
+            document.getElementById('logoSizeVal').innerText = `${sizeSlider.value}px`;
+
+            let html = '';
+            if (selectedTemplate === 1) html = renderT1(data);
+            else if (selectedTemplate === 2) html = renderT2(data);
+            else if (selectedTemplate === 3) html = renderT3(data);
+            else if (selectedTemplate === 4) html = renderT4(data);
+            else if (selectedTemplate === 5) html = renderT5(data);
+
+            document.getElementById('signature-preview').innerHTML = html;
+        }
+
+        function copySignature() {
+            const el = document.getElementById('signature-preview');
+            
+            // Rich Text Selection & Copy
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('Signature ready! Paste into Gmail settings.');
+                } else {
+                    showToast('Failed to copy. Please manually select the template.', true);
+                }
+            } catch (err) {
+                showToast('Failed to copy. Try highlighting manually.', true);
+            }
+            selection.removeAllRanges();
+        }
+
+        function downloadHTML() {
+            const signatureContent = document.getElementById('signature-preview').innerHTML;
+            const blob = new Blob([signatureContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'gmail-signature.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('HTML file saved successfully!');
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMsg.innerText = msg;
+            toastIcon.innerText = isError ? '❌' : '✅';
+            
+            toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        function resetFields() {
+            document.getElementById('name').value = 'Jane Doe';
+            document.getElementById('title').value = 'Creative Director';
+            document.getElementById('company').value = 'Design Studio Inc.';
+            document.getElementById('phone').value = '+1 (234) 567-8900';
+            document.getElementById('mobile').value = '+1 (987) 654-3210';
+            document.getElementById('email').value = 'jane@designstudio.com';
+            document.getElementById('website').value = 'https://designstudio.com';
+            document.getElementById('address').value = '789 Creative Blvd, Suite 100';
+            document.getElementById('logoUrl').value = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80';
+            document.getElementById('companyLogoUrl').value = 'https://cdn-icons-png.flaticon.com/128/6013/6013233.png';
+            document.getElementById('accentColor').value = '#3B82F6';
+            document.getElementById('fontFamily').value = 'Arial, sans-serif';
+            document.getElementById('logoSize').value = '80';
+            document.getElementById('linkedin').value = 'https://linkedin.com';
+            document.getElementById('twitter').value = 'https://twitter.com';
+            document.getElementById('instagram').value = 'https://instagram.com';
+            document.getElementById('facebook').value = 'https://facebook.com';
+            document.getElementById('github').value = 'https://github.com';
+            
+            document.getElementById('showLogo').checked = true;
+            document.getElementById('showCompanyLogo').checked = false;
+            document.getElementById('showSocials').checked = true;
+
+            selectTemplate(1);
+        }
+
+        // Attach global events
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', updateSignature);
+            input.addEventListener('change', updateSignature);
+        });
+
+        // Initialize view
+        updateSignature();
+    </script>
+</body>
+</html>
